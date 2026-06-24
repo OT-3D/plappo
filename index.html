@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+<title>Plappo – Sprechen lernen mit Pepe</title>
+<meta name="description" content="Plappo: spielerisch Sprechen üben für Kinder von 2 bis 10. Mit Papagei Pepe.">
+<meta name="theme-color" content="#34c1a8">
+
+<!-- iOS / PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Plappo">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
+<link rel="preload" href="fonts/fredoka-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/nunito-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Lautsprecher-Status / live region for nothing visible; the whole app mounts here -->
+  <div id="app" aria-live="polite"></div>
+
+  <!-- Layers that live above the app -->
+  <div id="fx-layer" aria-hidden="true"></div>   <!-- confetti, stars, celebration -->
+  <div id="mascot-layer" aria-hidden="true"></div> <!-- Pepe the parrot floats here -->
+
+  <!-- Tap-to-start gate: needed so iOS allows audio (speech + sound) on first gesture -->
+  <div id="audio-gate" class="audio-gate">
+    <div class="gate-card">
+      <div class="gate-parrot">🦜</div>
+      <h1 class="gate-title">Plappo</h1>
+      <p class="gate-sub">Sprechen lernen mit Pepe</p>
+      <button id="gate-btn" class="big-start-btn">▶ Los geht's!</button>
+      <p class="gate-hint">Tipp auf den großen Knopf</p>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/diary.js"></script>
+  <script src="js/face.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/games/repeat.js"></script>
+  <script src="js/games/wordworld.js"></script>
+  <script src="js/games/sameDifferent.js"></script>
+  <script src="js/games/minimalpair.js"></script>
+  <script src="js/games/anlaut.js"></script>
+  <script src="js/games/syllables.js"></script>
+  <script src="js/games/rhyme.js"></script>
+  <script src="js/games/mundmotorik.js"></script>
+  <script src="js/games/quatschmaschine.js"></script>
+  <script src="js/games/zauberschluessel.js"></script>
+  <script src="js/fun/bubbles.js"></script>
+  <script src="js/fun/catch.js"></script>
+  <script src="js/fun/pups.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(()=>{});
+      });
+    }
+  </script>
+</body>
+</html>

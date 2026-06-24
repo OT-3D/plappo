@@ -55,6 +55,7 @@ window.PlappoAudio = (function(){
   /* ---------- Speak: pre-rendered neural-voice clips first, TTS fallback ---------- */
   let clipManifest = null;      // { "<text>": "<file>.mp3" }
   let clipAudio = null;         // current clip player
+  let playSeq = 0;              // bumped on every speak; lets us ignore superseded clips
   function loadManifest(){
     fetch("audio/manifest.json").then(r=> r.ok ? r.json() : null)
       .then(m=>{ clipManifest = m || {}; })
@@ -68,6 +69,7 @@ window.PlappoAudio = (function(){
     const file = clipManifest && clipManifest[text];
     if(file){
       // play the warm pre-rendered clip
+      const myToken = ++playSeq;
       return new Promise(resolve=>{
         try{
           stopClip();
@@ -75,7 +77,13 @@ window.PlappoAudio = (function(){
           if(!clipAudio) clipAudio = new Audio();
           let done = false, fellBack = false;
           const fin = ()=>{ if(done) return; done = true; resolve(); };
-          const fallback = ()=>{ if(fellBack || done) return; fellBack = true; ttsSpeak(text, opts).then(fin); };
+          // only fall back to TTS if THIS clip genuinely failed AND wasn't superseded
+          // by a newer speak() (interrupting a clip must NOT trigger the system voice)
+          const fallback = ()=>{
+            if(fellBack || done) return;
+            if(myToken !== playSeq){ fin(); return; }   // a newer clip took over -> just resolve, no TTS
+            fellBack = true; ttsSpeak(text, opts).then(fin);
+          };
           clipAudio.onended = fin;
           clipAudio.onerror = fallback;
           clipAudio.src = "audio/" + file;

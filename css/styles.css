@@ -459,11 +459,15 @@ body::after{ right:-110px; bottom:-60px; transform:rotate(-10deg);
 .anim-lickCircle .mf-tongue{ opacity:1; rx:11; ry:11; animation:mf-circle 2.1s linear infinite; }
 @keyframes mf-circle{ from{ transform:rotate(0deg) translateX(20px) rotate(0deg);} to{ transform:rotate(360deg) translateX(20px) rotate(-360deg);} }
 
-/* 9 — Zunge klettert hinter die Zähne (für L) */
+/* 9 — Zunge klettert hoch und VERSCHWINDET hinter den Zähnen (für L) */
 .anim-tongueRidge .mf-open{ opacity:.9; transform:scaleY(.95); }
 .anim-tongueRidge .mf-teeth{ opacity:1; }
-.anim-tongueRidge .mf-tongue{ opacity:1; animation:mf-ridge 1s ease-in-out infinite; }
-@keyframes mf-ridge{ 0%,100%{ transform:translateY(6px);} 45%,62%{ transform:translateY(-18px) scaleY(1.25);} }
+.anim-tongueRidge .mf-tongue{ opacity:1; animation:mf-ridge 1.4s ease-in-out infinite; }
+@keyframes mf-ridge{
+  0%,16%{ transform:translateY(9px) scaleY(1); opacity:1; }       /* unten, sichtbar */
+  48%,72%{ transform:translateY(-20px) scaleY(.65); opacity:0; }  /* hochgeklettert, hinter den Zähnen weg */
+  100%{ transform:translateY(9px) scaleY(1); opacity:1; }
+}
 
 /* 10 — obere Zähne auf die Unterlippe (für F) */
 .anim-lipbite .mf-teeth{ opacity:1; }

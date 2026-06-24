@@ -67,7 +67,7 @@
       ]));
       recordBlock(stage, canRec, {
         label:"Mach es nach",
-        onReward:()=>{ UI.reward({ worldId:"zauber", stars:1 }); },
+        onReward:()=>{ UI.reward({ worldId:"zauber", stars:1, praise:false }); },
         onDone:()=>{ UI.say("Toll gemacht! Jetzt probieren wir echte Wörter."); step = 0; setTimeout(renderWord, 800); }
       });
       setTimeout(()=>UI.say(key.trick), 350);
@@ -99,7 +99,7 @@
       ]));
       recordBlock(stage, canRec, {
         label:"Sprich nach",
-        onReward:()=>{ UI.reward({ worldId:"zauber", stars:1 }); S.addPhonemeRep(ph.id); },
+        onReward:()=>{ UI.reward({ worldId:"zauber", stars:1, praise:false }); S.addPhonemeRep(ph.id); },
         onDone:()=>{ step++; setTimeout(renderWord, 700); }
       });
       setTimeout(()=>UI.say(text,{rate:0.7}), 350);

@@ -17,7 +17,8 @@
     let idx = 0, recUrl = null, recording = false, exited = false, rewardedWord = false;
     let canRec = await A.canRecord();
     const exit = ()=>{ exited = true; A.stopMic(); ctx.exit(); };
-    function rewardWord(){ if(rewardedWord) return; rewardedWord = true; UI.reward({ worldId:"quatsch", stars:1 }); S.addPhonemeRep(ph.id); }
+    function rewardWord(){ if(rewardedWord) return; rewardedWord = true;
+      UI.reward({ worldId:"quatsch", stars:1, praise:false }); S.addPhonemeRep(ph.id); UI.say(UI.rand(GIGGLES)); }
 
     root.appendChild(UI.topbar({ onHome: exit }));
     root.appendChild(el("h2",{class:"screen-title"}, "🤪 Quatsch-Maschine"));
@@ -57,8 +58,7 @@
     }
 
     function advance(){
-      rewardWord();                 // ⭐ (no-op if already earned by recording)
-      UI.say(UI.rand(GIGGLES));
+      rewardWord();                 // ⭐ + giggle (no-op if already earned by recording)
       idx++;
       if(idx >= words.length){ prog.set(1); finish(); }
       else setTimeout(render, 700);

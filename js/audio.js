@@ -38,9 +38,9 @@ window.PlappoAudio = (function(){
     if(!voices || !voices.length) return null;
     const de = voices.filter(v => /^de(-|_|$)/i.test(v.lang));
     if(!de.length) return null;
-    // prefer a female/“premium” sounding German voice; otherwise first German
-    const pref = de.find(v => /Anna|Petra|Marlene|Katja|google/i.test(v.name));
-    return pref || de[0];
+    // prefer a MALE German voice (matches Pepe's male neural voice) for the rare fallback
+    const male = de.find(v => /Martin|Markus|Yannick|Conrad|Hans|Reed|Viktor|Stefan/i.test(v.name));
+    return male || de[0];
   }
   function loadVoices(){
     if(!("speechSynthesis" in window)) return;

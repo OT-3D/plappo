@@ -1,5 +1,5 @@
 /* Plappo service worker – offline-first precache. Bump CACHE on release. */
-const CACHE = "plappo-v12";
+const CACHE = "plappo-v13";
 const ASSETS = [
   "./",
   "./index.html",

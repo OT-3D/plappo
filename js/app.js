@@ -273,7 +273,7 @@
   }
   function lockedHint(g){
     UI.sfx("wrongSoft");
-    UI.say("Sammle noch "+((g.unlockStars||0)-S.stars)+" Sterne, dann kannst du das spielen!");
+    UI.say("Dafür brauchst du noch ein paar Sterne. Spiel weiter, dann kannst du das auch spielen!");
   }
   function launchFun(g){
     clear(); UI.hidePepe(false);

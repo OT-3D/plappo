@@ -15,18 +15,23 @@
     ["A","I","E"].forEach(p=>(ph.words[p]||[]).forEach(w=> out.push(w)));
     return UI.shuffle(out).slice(0, 4);
   }
-  // one-tap record + self-listen; reveals a big "Weiter" once the child has recorded.
-  function recordBlock(stage, canRec, label, onDone){
-    const weiter = ()=> el("button",{class:"round-btn next big", onclick:onDone},
+  // one-tap record + self-listen. Gives the success ⭐ right after recording,
+  // then reveals a big "Weiter". opts = { label, onReward, onDone }.
+  function recordBlock(stage, canRec, opts){
+    opts = opts || {};
+    let rewarded = false;
+    const doReward = ()=>{ if(!rewarded){ rewarded = true; if(opts.onReward) opts.onReward(); } };
+    const weiter = ()=> el("button",{class:"round-btn next big",
+      onclick:()=>{ doReward(); if(opts.onDone) opts.onDone(); }},
       [el("span",{class:"b-emoji emoji"},"➡"),"Weiter"]);
     if(!canRec){ stage.appendChild(el("div",{class:"btn-row"},[ weiter() ])); return; }
     const recBtn = el("button",{class:"round-btn record big"},
-      [el("span",{class:"b-emoji emoji"},"🎤"), el("span",{class:"rl"}, label||"Mach es nach")]);
+      [el("span",{class:"b-emoji emoji"},"🎤"), el("span",{class:"rl"}, opts.label||"Mach es nach")]);
     const row = el("div",{class:"btn-row"},[recBtn]);
     stage.appendChild(row);
-    recBtn.addEventListener("click", async ()=>{   // ONE tap -> records 3s -> plays you back
-      await UI.recordTake(recBtn, {onError:()=>{ if(!row.querySelector(".round-btn.next")){ recBtn.style.display="none"; row.appendChild(weiter()); } }});
-      if(!row.querySelector(".round-btn.next")) row.appendChild(weiter());
+    recBtn.addEventListener("click", async ()=>{   // ONE tap -> records 3s -> plays you back -> ⭐
+      const u = await UI.recordTake(recBtn, {onError:()=>{ if(!row.querySelector(".round-btn.next")){ recBtn.style.display="none"; row.appendChild(weiter()); } }});
+      if(u){ doReward(); if(!row.querySelector(".round-btn.next")) row.appendChild(weiter()); }
     });
   }
 
@@ -47,10 +52,12 @@
       if(exited) return;
       stage.innerHTML = ""; prog.set(0);
       if(!key){ step = 0; renderWord(); return; }   // no key -> straight to words
-      stage.appendChild(el("div",{class:"word-card"},[
-        el("div",{class:"big-emoji emoji zs-animal"}, key.animal),
-        el("div",{class:"word-text"}, "Der Zaubertrick")
-      ]));
+      // a funny mouth animation SHOWS where the tongue/lips go (front sounds),
+      // or the helper animal for the back sounds (k/g/r)
+      const visual = (key.face && window.PlappoFace)
+        ? PlappoFace.build(key.face)
+        : el("div",{class:"big-emoji emoji zs-animal"}, key.animal);
+      stage.appendChild(el("div",{class:"word-card"},[ visual, el("div",{class:"word-text"}, "Der Zaubertrick") ]));
       stage.appendChild(el("p",{class:"screen-sub", style:"text-align:center"}, key.trick));
       stage.appendChild(el("div",{class:"btn-row"},[
         el("button",{class:"round-btn listen", onclick:()=>{ UI.sfx("tap"); UI.say(key.trick); }},
@@ -58,10 +65,10 @@
         el("button",{class:"round-btn listen", onclick:()=>{ UI.sfx("tap"); UI.say(key.again); }},
           [el("span",{class:"b-emoji emoji"},"🔁"),"Nochmal"])
       ]));
-      recordBlock(stage, canRec, "Mach es nach", ()=>{
-        UI.reward({ worldId:"zauber", stars:1, praise:false });
-        UI.say("Toll gemacht! Jetzt probieren wir echte Wörter.");
-        step = 0; setTimeout(renderWord, 800);
+      recordBlock(stage, canRec, {
+        label:"Mach es nach",
+        onReward:()=>{ UI.reward({ worldId:"zauber", stars:1 }); },
+        onDone:()=>{ UI.say("Toll gemacht! Jetzt probieren wir echte Wörter."); step = 0; setTimeout(renderWord, 800); }
       });
       setTimeout(()=>UI.say(key.trick), 350);
     }
@@ -90,10 +97,10 @@
         el("button",{class:"round-btn listen", onclick:()=>{ UI.sfx("tap"); UI.say(text,{rate:0.7}); }},
           [el("span",{class:"b-emoji emoji"},"🔊"),"Hör zu"])
       ]));
-      recordBlock(stage, canRec, "Sprich nach", ()=>{
-        UI.reward({ worldId:"zauber", stars:1, praise:false });
-        S.addPhonemeRep(ph.id);
-        step++; setTimeout(renderWord, 700);
+      recordBlock(stage, canRec, {
+        label:"Sprich nach",
+        onReward:()=>{ UI.reward({ worldId:"zauber", stars:1 }); S.addPhonemeRep(ph.id); },
+        onDone:()=>{ step++; setTimeout(renderWord, 700); }
       });
       setTimeout(()=>UI.say(text,{rate:0.7}), 350);
     }

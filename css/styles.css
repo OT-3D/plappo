@@ -459,6 +459,19 @@ body::after{ right:-110px; bottom:-60px; transform:rotate(-10deg);
 .anim-lickCircle .mf-tongue{ opacity:1; rx:11; ry:11; animation:mf-circle 2.1s linear infinite; }
 @keyframes mf-circle{ from{ transform:rotate(0deg) translateX(20px) rotate(0deg);} to{ transform:rotate(360deg) translateX(20px) rotate(-360deg);} }
 
+/* 9 — Zunge klettert hinter die Zähne (für L) */
+.anim-tongueRidge .mf-open{ opacity:.9; transform:scaleY(.95); }
+.anim-tongueRidge .mf-teeth{ opacity:1; }
+.anim-tongueRidge .mf-tongue{ opacity:1; animation:mf-ridge 1s ease-in-out infinite; }
+@keyframes mf-ridge{ 0%,100%{ transform:translateY(6px);} 45%,62%{ transform:translateY(-18px) scaleY(1.25);} }
+
+/* 10 — obere Zähne auf die Unterlippe (für F) */
+.anim-lipbite .mf-teeth{ opacity:1; }
+.anim-lipbite .mf-open{ opacity:0; }
+.anim-lipbite .mf-lips{ animation:mf-bite 1.1s ease-in-out infinite; }
+.anim-lipbite .mf-bubbles circle:first-child{ animation:mf-bub 1.1s ease-out infinite; }
+@keyframes mf-bite{ 0%,100%{ transform:translateY(3px) scaleY(.9);} 50%{ transform:translateY(-6px) scaleY(.5);} }
+
 /* countdown badge over the face */
 .mf-count{ font-family:var(--display); font-weight:700; font-size:40px; color:#fff;
   background:var(--papaya); width:64px; height:64px; border-radius:50%;

@@ -14,9 +14,10 @@
   async function mount(root, ctx){
     const ph = ctx.phoneme || S.activePhonemes()[0];
     let words = UI.shuffle(((D.QUATSCH && D.QUATSCH[ph.id]) || ["Lalülü","Sosasu","Kakako"]).slice());
-    let idx = 0, recUrl = null, recording = false, exited = false;
+    let idx = 0, recUrl = null, recording = false, exited = false, rewardedWord = false;
     let canRec = await A.canRecord();
     const exit = ()=>{ exited = true; A.stopMic(); ctx.exit(); };
+    function rewardWord(){ if(rewardedWord) return; rewardedWord = true; UI.reward({ worldId:"quatsch", stars:1 }); S.addPhonemeRep(ph.id); }
 
     root.appendChild(UI.topbar({ onHome: exit }));
     root.appendChild(el("h2",{class:"screen-title"}, "🤪 Quatsch-Maschine"));
@@ -28,7 +29,7 @@
 
     function render(){
       if(exited) return;
-      stage.innerHTML = ""; recUrl = null; recording = false;
+      stage.innerHTML = ""; recUrl = null; recording = false; rewardedWord = false;
       const word = words[idx]; prog.set(idx / words.length);
 
       stage.appendChild(el("div",{class:"word-card"},[
@@ -41,9 +42,9 @@
       const recBtn = el("button",{class:"round-btn record big"},
         [el("span",{class:"b-emoji emoji"},"🎤"), el("span",{class:"rl"},"Sprich nach")]);
       if(canRec){
-        recBtn.addEventListener("click", async ()=>{   // ONE tap -> records 3s -> plays you back
+        recBtn.addEventListener("click", async ()=>{   // ONE tap -> records 3s -> plays you back -> ⭐
           const u = await UI.recordTake(recBtn, {onError:()=>{ recBtn.style.display="none"; }});
-          if(u) recUrl = u;
+          if(u){ recUrl = u; rewardWord(); }
         });
       } else { recBtn.style.display = "none"; }
       stage.appendChild(el("div",{class:"btn-row"}, canRec ? [listen, recBtn] : [listen]));
@@ -56,8 +57,7 @@
     }
 
     function advance(){
-      UI.reward({ worldId:"quatsch", stars:1, praise:false });
-      S.addPhonemeRep(ph.id);
+      rewardWord();                 // ⭐ (no-op if already earned by recording)
       UI.say(UI.rand(GIGGLES));
       idx++;
       if(idx >= words.length){ prog.set(1); finish(); }

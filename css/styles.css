@@ -139,8 +139,8 @@ body::after{ right:-110px; bottom:-60px; transform:rotate(-10deg);
   box-shadow:0 4px 0 var(--plum-deep); }
 
 /* ------------------------------------------------ headings */
-.screen-title{ font-family:var(--display); font-weight:600; font-size:34px; margin:8px 4px 14px; }
-.screen-sub{ font-size:20px; font-weight:700; color:var(--ink-soft); margin:-6px 4px 16px; }
+.screen-title{ font-family:var(--display); font-weight:600; font-size:32px; margin:4px 4px 8px; }
+.screen-sub{ font-size:19px; font-weight:700; color:var(--ink-soft); margin:-2px 4px 10px; }
 
 /* ------------------------------------------------ hub hero (Pepe's canopy) */
 .hub-hero{
@@ -192,15 +192,15 @@ body::after{ right:-110px; bottom:-60px; transform:rotate(-10deg);
 .tile.c-sky{  --tile-sh:#3f9fc0; --tile-bar:#5fb6da; background:linear-gradient(180deg,#e6f6ff,#fff); }
 
 /* ------------------------------------------------ play area + word card */
-.play-area{ display:flex; flex-direction:column; align-items:center; gap:18px; }
+.play-area{ display:flex; flex-direction:column; align-items:center; gap:13px; }
 .word-card{
   position:relative; background:var(--card); border-radius:var(--r-xl);
   box-shadow:0 12px 0 #e7dcc2, 0 20px 30px var(--shadow);
-  padding:24px 30px; text-align:center;
-  display:flex; flex-direction:column; align-items:center; gap:6px; min-width:256px;
+  padding:18px 24px; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:4px; min-width:240px;
 }
-.word-card .big-emoji{ font-size:148px; line-height:1; filter:drop-shadow(0 10px 12px rgba(16,60,48,.18)); }
-.word-card .word-text{ font-family:var(--display); font-weight:600; font-size:44px; }
+.word-card .big-emoji{ font-size:118px; line-height:1; filter:drop-shadow(0 10px 12px rgba(16,60,48,.18)); }
+.word-card .word-text{ font-family:var(--display); font-weight:600; font-size:40px; }
 .word-card .word-text .tgt{ color:var(--jade); position:relative; }
 .word-card .word-text .tgt::after{ content:""; position:absolute; left:0; right:0; bottom:-4px;
   height:5px; border-radius:3px; background:var(--sun); }
@@ -513,9 +513,36 @@ body::after{ right:-110px; bottom:-60px; transform:rotate(-10deg);
 
 /* small phones: fewer, bigger choices */
 @media (max-width:380px){
-  .word-card .big-emoji{ font-size:116px; }
+  .word-card .big-emoji{ font-size:104px; }
   .word-card .word-text{ font-size:34px; }
   .choice .c-emoji{ font-size:66px; }
   .choice-grid.cols-3{ grid-template-columns:repeat(2,1fr); }
   .gate-title{ font-size:58px; }
+}
+
+/* SHORT viewports (most phones in Safari): keep the action buttons on-screen,
+   no scrolling needed. Shrink the vertical hogs so a whole game fits. */
+@media (max-height:820px){
+  #app{ padding-top:calc(var(--safe-top) + 6px); }
+  .topbar{ margin-bottom:8px; }
+  .word-card{ padding:12px 20px; }
+  .word-card .big-emoji{ font-size:92px; }
+  .word-card .word-text{ font-size:34px; }
+  .play-area{ gap:10px; }
+  .screen-title{ font-size:27px; margin:2px 4px 6px; }
+  .prog-wrap{ height:14px; }
+  .round-btn{ min-height:78px; font-size:22px; }
+  .round-btn.big{ min-height:88px; font-size:24px; }
+  .btn-row{ gap:12px; }
+  .judge-btn{ width:96px; height:96px; font-size:46px; }
+  .mouthface-wrap{ width:150px; height:150px; }
+}
+@media (max-height:670px){
+  .word-card .big-emoji{ font-size:72px; }
+  .word-card .word-text{ font-size:30px; }
+  .word-card{ padding:10px 16px; }
+  .screen-title{ font-size:23px; }
+  .round-btn{ min-height:66px; font-size:20px; }
+  .round-btn.big{ min-height:74px; }
+  .mouthface-wrap{ width:118px; height:118px; }
 }
